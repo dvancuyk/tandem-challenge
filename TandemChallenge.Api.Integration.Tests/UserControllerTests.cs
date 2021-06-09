@@ -11,7 +11,7 @@ using TandemChallenge.Api.Models;
 namespace TandemChallenge.Api.Integration.Tests
 {
     [TestClass, TestCategory("integration")]
-    public class UserControllerTests 
+    public class UserControllerTests
     {
 		private WebApplicationFactory<Startup> webAppFactory;
 
@@ -63,7 +63,7 @@ namespace TandemChallenge.Api.Integration.Tests
 				var user = GenerateUser();
 				await httpClient.PostAsJsonAsync("/User", user);
 
-				var response = await httpClient.PostAsJsonAsync("", user);
+				var response = await httpClient.PostAsJsonAsync("/User", user);
 				response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 			}
 		}

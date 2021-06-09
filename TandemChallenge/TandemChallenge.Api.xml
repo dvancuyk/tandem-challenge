@@ -11,6 +11,87 @@
             <param name="viewModel"></param>
             <returns></returns>
         </member>
+        <member name="T:TandemChallenge.Api.Middleware.ExceptionRule">
+            <summary>
+            Defines a rule for a status type that should be returned when an exception of the specified type is encountered.
+            </summary>
+        </member>
+        <member name="M:TandemChallenge.Api.Middleware.ExceptionRule.#ctor(System.Type,System.Net.HttpStatusCode)">
+            <summary>
+            Creates a new instance of the <see cref="T:TandemChallenge.Api.Middleware.ExceptionRule"/>
+            </summary>
+            <param name="exceptionType"></param>
+            <param name="expectedReturnStatus"></param>
+        </member>
+        <member name="P:TandemChallenge.Api.Middleware.ExceptionRule.ExceptionType">
+            <summary>
+            The type of exception this rule should handle.
+            </summary>
+        </member>
+        <member name="P:TandemChallenge.Api.Middleware.ExceptionRule.ExpectedReturnStatus">
+            <summary>
+            The status that should be returned when this exception type is encountered.
+            </summary>
+        </member>
+        <member name="M:TandemChallenge.Api.Middleware.ExceptionRule.For``1(System.Net.HttpStatusCode)">
+            <summary>
+            Creates a new rule for the indicated exception by returning the provided error code
+            </summary>
+            <typeparam name="TException"></typeparam>
+            <param name="returnCode"></param>
+            <returns></returns>
+        </member>
+        <member name="T:TandemChallenge.Api.Middleware.HandleExceptionsMiddleware">
+            <summary>
+            Middleware for logging unhandled errors in the app pipeline.
+            </summary>
+        </member>
+        <member name="M:TandemChallenge.Api.Middleware.HandleExceptionsMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,TandemChallenge.Api.Middleware.HandleExceptionsOptions,Microsoft.Extensions.Logging.ILogger{TandemChallenge.Api.Middleware.HandleExceptionsMiddleware})">
+            <summary>
+            Construct a LogUnhandledExceptionsMiddleware
+            </summary>
+            <param name="next">The <see cref="T:Microsoft.AspNetCore.Http.RequestDelegate" /> that is next in the call chain.</param>
+            <param name="options">Configures how this middleware should work.</param>
+            <param name="logger"></param>
+        </member>
+        <member name="M:TandemChallenge.Api.Middleware.HandleExceptionsMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            The method invoked when a request is processed.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext" /> for the request.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task" /> that can be awaited.</returns>
+        </member>
+        <member name="T:TandemChallenge.Api.Middleware.HandleExceptionsMiddlewareExtensions">
+            <summary>
+            Extensions for the <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder" /> interface.
+            </summary>
+        </member>
+        <member name="M:TandemChallenge.Api.Middleware.HandleExceptionsMiddlewareExtensions.UseExceptionRules(Microsoft.AspNetCore.Builder.IApplicationBuilder,TandemChallenge.Api.Middleware.ExceptionRule[])">
+            <summary>
+            Add the <see cref="T:TandemChallenge.Api.Middleware.HandleExceptionsMiddleware" /> to the builder.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder" /> being configured.</param>
+            <param name="rules"></param>
+            <returns>The <paramref name="builder" /> to enable fluent configuration.</returns>
+            <remarks>
+            </remarks>
+        </member>
+        <member name="T:TandemChallenge.Api.Middleware.HandleExceptionsOptions">
+            <summary>
+            Configuration to change how the <see cref="T:TandemChallenge.Api.Middleware.HandleExceptionsMiddleware"/> should work.
+            </summary>
+        </member>
+        <member name="M:TandemChallenge.Api.Middleware.HandleExceptionsOptions.#ctor(TandemChallenge.Api.Middleware.ExceptionRule[])">
+            <summary>
+            Creates a new instance of the <see cref="T:TandemChallenge.Api.Middleware.HandleExceptionsOptions"/>
+            </summary>
+            <param name="rules"></param>
+        </member>
+        <member name="P:TandemChallenge.Api.Middleware.HandleExceptionsOptions.Rules">
+            <summary>
+            The list of rules the <see cref="T:TandemChallenge.Api.Middleware.HandleExceptionsMiddleware"/> should use when handling exceptions
+            </summary>
+        </member>
         <member name="T:TandemChallenge.Api.Models.AddUserViewModel">
             <summary>
             Defines the contract for adding a new user within the system.

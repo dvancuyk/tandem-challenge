@@ -1,3 +1,4 @@
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -10,6 +11,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using TandemChallenge.Api.Mapping;
+using TandemChallenge.Api.Middleware;
 using TandemChallenge.Api.Validation;
 using TandemChallenge.Domain;
 using TandemChallenge.Domain.Configuration;
@@ -72,6 +74,8 @@ namespace TandemChallenge
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseExceptionRules(ExceptionRule.For<ValidationException>(System.Net.HttpStatusCode.BadRequest));
 
             app.UseEndpoints(endpoints =>
             {
