@@ -63,7 +63,11 @@ namespace TandemChallenge
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "TandemChallenge v1"));
             }
 
-            app.UseHttpsRedirection();
+            if(env.EnvironmentName != "tests")
+            {
+                app.UseHttpsRedirection();
+            }
+            
 
             app.UseRouting();
 
