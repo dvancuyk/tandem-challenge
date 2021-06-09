@@ -1,5 +1,4 @@
 using FluentValidation;
-using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -14,7 +13,6 @@ using TandemChallenge.Api.Mapping;
 using TandemChallenge.Api.Middleware;
 using TandemChallenge.Domain;
 using TandemChallenge.Domain.Configuration;
-using TandemChallenge.Domain.Validation;
 using TandemChallenge.Infrastructure.MongoDb;
 
 namespace TandemChallenge
@@ -44,7 +42,10 @@ namespace TandemChallenge
                 c.IncludeXmlComments(xmlPath);
             });
 
-            services.Configure<MongoConnection>(configuration.GetSection("MongoConnection"));
+            var mongoConnection = new MongoConnection();
+            configuration.Bind("MongoConnection", mongoConnection);
+            services.AddSingleton<MongoConnection>(mongoConnection);
+
             services.AddScoped<IUserRepository, MongoUserRepository>();
 
             services.AddMediatR(typeof(CreateUserCommand).Assembly);
@@ -55,6 +56,9 @@ namespace TandemChallenge
                 cfg.AddProfile<CreateUserRequestToUserMappingProfile>();
                 cfg.AddProfile<UserToUserViewModelProfile>();
             });
+
+            services.AddHealthChecks()
+                .AddMongoDb(mongoConnection.ConnectionString, mongoConnection.Database, null, null, TimeSpan.FromSeconds(1));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -82,6 +86,7 @@ namespace TandemChallenge
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/health");
             });
         }
     }
