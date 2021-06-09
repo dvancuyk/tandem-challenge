@@ -4,11 +4,31 @@
         <name>TandemChallenge.Api</name>
     </assembly>
     <members>
+        <member name="T:TandemChallenge.Controllers.Api.UserController">
+            <summary>
+            Contains routes that retrieve and store User information.
+            </summary>
+        </member>
+        <member name="M:TandemChallenge.Controllers.Api.UserController.#ctor(MediatR.IMediator,AutoMapper.IMapper,Microsoft.Extensions.Logging.ILogger{TandemChallenge.Controllers.Api.UserController})">
+            <summary>
+            Creates a new instance of the <see cref="T:TandemChallenge.Controllers.Api.UserController"/>
+            </summary>
+            <param name="mediator"></param>
+            <param name="mapper"></param>
+            <param name="logger"></param>
+        </member>
         <member name="M:TandemChallenge.Controllers.Api.UserController.Add(TandemChallenge.Api.Models.AddUserViewModel)">
             <summary>
             Creates a new user within the system.
             </summary>
             <param name="viewModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TandemChallenge.Controllers.Api.UserController.GetByEmail(System.String)">
+            <summary>
+            Searches for the single user registered with the provided email.
+            </summary>
+            <param name="email">A valid email address</param>
             <returns></returns>
         </member>
         <member name="T:TandemChallenge.Api.Middleware.ExceptionRule">

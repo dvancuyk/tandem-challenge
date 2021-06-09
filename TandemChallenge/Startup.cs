@@ -12,9 +12,9 @@ using System.IO;
 using System.Reflection;
 using TandemChallenge.Api.Mapping;
 using TandemChallenge.Api.Middleware;
-using TandemChallenge.Api.Validation;
 using TandemChallenge.Domain;
 using TandemChallenge.Domain.Configuration;
+using TandemChallenge.Domain.Validation;
 using TandemChallenge.Infrastructure.MongoDb;
 
 namespace TandemChallenge
@@ -32,8 +32,7 @@ namespace TandemChallenge
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddControllers()
-                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<AddUserViewModelValidator>()); 
+                .AddControllers();
 
             services.AddSwaggerGen(c =>
             {
@@ -47,7 +46,10 @@ namespace TandemChallenge
 
             services.Configure<MongoConnection>(configuration.GetSection("MongoConnection"));
             services.AddScoped<IUserRepository, MongoUserRepository>();
+
             services.AddMediatR(typeof(CreateUserCommand).Assembly);
+            services.AddScoped<IPipelineBehavior<CreateUserCommand, User>, ValidateCreateUserCommand>();
+
             services.AddAutoMapper(cfg => {
                 cfg.AddProfile<AddUserViewModelToCreateUserCommandProfile>();
                 cfg.AddProfile<CreateUserRequestToUserMappingProfile>();

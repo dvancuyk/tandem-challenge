@@ -1,7 +1,9 @@
 ﻿using FluentAssertions;
 using FluentValidation;
+using MediatR;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,13 +13,34 @@ namespace TandemChallenge.Domain.Tests
     [TestClass, TestCategory("unit")]
     public class ValidateCreateUserCommandTests
     {
+        private bool nextCalled = false;
         private readonly IUserRepository userRepository = Substitute.For<IUserRepository>();
-        private Task<User> DefaultNextOperation() { return Task.FromResult((User)null); }
+        private Task<User> DefaultNextOperation() 
+        {
+            nextCalled = true;
+            return Task.FromResult((User)null); 
+        }
 
         [TestInitialize]
         public void Initialize()
         {
+            nextCalled = false;
             userRepository.ClearReceivedCalls();
+        }
+
+        [TestMethod]
+        public async Task Handle_ShouldProcessPipeline_GivenCommandIsValid()
+        {
+            // Arrange
+            var command = new CreateUserCommand("Test", "A.", "User", "555-123-9876", "test.a.user@fakedomain.com");
+
+            var validator = new ValidateCreateUserCommand(userRepository);
+
+            // Act
+            await validator.Handle(command, CancellationToken.None, DefaultNextOperation);
+
+            // Assert
+            nextCalled.Should().BeTrue();
         }
 
         [TestMethod]
@@ -64,9 +87,6 @@ namespace TandemChallenge.Domain.Tests
         {
             // Arrange
             var command = new CreateUserCommand("Test", "A.", null, "555-123-9876", "test.a.user@fakedomain.com");
-            userRepository
-                .SearchAsync(Arg.Is<UserSearchCriteria>(filter => filter.Email == command.EmailAddress))
-                .Returns(new[] { new User() });
 
             var validator = new ValidateCreateUserCommand(userRepository);
 
@@ -83,10 +103,8 @@ namespace TandemChallenge.Domain.Tests
         [TestMethod]
         public async Task Handle_ShouldThrowValidationException_GivenEmailIsMissing()
         {
+            // Arrange
             var command = new CreateUserCommand("Test", "A.", "User", "555-123-9876", null);
-            userRepository
-                .SearchAsync(Arg.Is<UserSearchCriteria>(filter => filter.Email == command.EmailAddress))
-                .Returns(new[] { new User() });
 
             var validator = new ValidateCreateUserCommand(userRepository);
 
@@ -97,7 +115,7 @@ namespace TandemChallenge.Domain.Tests
             exception.Errors.Should()
                 .HaveCount(1)
                 .And
-                .Contain(ve => ve.PropertyName == "EmailAddress" && ve.ErrorMessage == "Email is required.");
+                .Contain(ve => ve.PropertyName == "EmailAddress" && ve.ErrorMessage == "Email address is required.");
         }
 
         [TestMethod]
@@ -117,17 +135,14 @@ namespace TandemChallenge.Domain.Tests
             exception.Errors.Should()
                 .HaveCount(1)
                 .And
-                .Contain(ve => ve.PropertyName == "EmailAddress" && ve.ErrorMessage == "Email is not in the correct format");
+                .Contain(ve => ve.PropertyName == "EmailAddress" && ve.ErrorMessage == "A valid email address must be provided");
         }
 
         [TestMethod]
         public async Task Handle_ShouldThrowValidationException_GivenPhoneNumberIsNotValid()
         {
+            // Arrange
             var command = new CreateUserCommand("Test", "A.", "User", "abd-123-9876", "test.a.user@fakedomain.com");
-            userRepository
-                .SearchAsync(Arg.Is<UserSearchCriteria>(filter => filter.Email == command.EmailAddress))
-                .Returns(new[] { new User() });
-
             var validator = new ValidateCreateUserCommand(userRepository);
 
             // Act

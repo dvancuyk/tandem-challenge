@@ -74,9 +74,9 @@ namespace TandemChallenge.Api.Integration.Tests
 			using (var httpClient = webAppFactory.CreateClient())
 			{
 				var user = GenerateUser();
-				await httpClient.PostAsJsonAsync("/User", user);
+				user.FirstName = null;
+				var response = await httpClient.PostAsJsonAsync("/User", user);
 
-				var response = await httpClient.PostAsJsonAsync("", user);
 				response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 			}
 		}
@@ -99,7 +99,7 @@ namespace TandemChallenge.Api.Integration.Tests
 				var user = GenerateUser();
 				await httpClient.PostAsJsonAsync("/User", user);
 
-				var response = await httpClient.GetAsync(user.EmailAddress);
+				var response = await httpClient.GetAsync("/User/" + user.EmailAddress);
 				response.StatusCode.Should().Be(HttpStatusCode.OK);
 			}
 		}

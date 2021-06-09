@@ -29,11 +29,6 @@ namespace TandemChallenge.Domain
         {
             logger.LogDebug($"Checking to see if the email '{request.EmailAddress}' exists");
 
-            if(await EmailExists(request.EmailAddress))
-            {
-                throw new ValidationException($"The email '{request.EmailAddress}' has already been registered.");
-            }
-
             logger.LogDebug($"Mapping the request with the email '{request.EmailAddress}' to a user");
             var user = mapper.Map<User>(request);
 
@@ -43,12 +38,5 @@ namespace TandemChallenge.Domain
             return user;
         }
 
-        private async Task<bool> EmailExists(string emailAddress)
-        {
-            var searchFilter = new UserSearchCriteria(emailAddress);
-            var matchingUsers = await userRepository.SearchAsync(searchFilter);
-
-            return matchingUsers.Any();
-        }
     }
 }

@@ -3,7 +3,6 @@ using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
-using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -34,26 +33,6 @@ namespace TandemChallenge.Domain.Tests
                         EmailAddress = command.EmailAddress,
                     };
                 });
-        }
-
-        [TestMethod]
-        public async Task HandleShould_ThrowValidationException_GivenEmailAlreadyExists()
-        {
-            // Arrange
-            var user = UserBuilder.CreateUser("John", "Doe");
-            userRepository
-                .SearchAsync(Arg.Is<UserSearchCriteria>(filter => filter.Email == user.EmailAddress))
-                .Returns(new[] { user });
-
-            var handler = new CreateUserCommandHandler(userRepository, mapper, logger);
-
-            var command = new CreateUserCommand(user.FirstName, user.MiddleName, user.LastName, user.PhoneNumber, user.EmailAddress);
-
-            // Act 
-            var exception = await Assert.ThrowsExceptionAsync<ValidationException>(() => handler.Handle(command, CancellationToken.None));
-
-            // Assert
-            exception.Message.Should().Contain($"The email '{user.EmailAddress}' has already been registered.");
         }
 
         [TestMethod]
