@@ -1,18 +1,18 @@
+using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.IO;
+using System.Reflection;
+using TandemChallenge.Api.Mapping;
+using TandemChallenge.Api.Validation;
 using TandemChallenge.Domain;
+using TandemChallenge.Domain.Configuration;
 using TandemChallenge.Infrastructure.MongoDb;
 
 namespace TandemChallenge
@@ -29,15 +29,28 @@ namespace TandemChallenge
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services
+                .AddControllers()
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<AddUserViewModelValidator>()); 
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "TandemChallenge", Version = "v1" });
+
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
             });
 
             services.Configure<MongoConnection>(configuration.GetSection("MongoConnection"));
             services.AddScoped<IUserRepository, MongoUserRepository>();
             services.AddMediatR(typeof(CreateUserCommand).Assembly);
+            services.AddAutoMapper(cfg => {
+                cfg.AddProfile<AddUserViewModelToCreateUserCommandProfile>();
+                cfg.AddProfile<CreateUserRequestToUserMappingProfile>();
+                cfg.AddProfile<UserToUserViewModelProfile>();
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

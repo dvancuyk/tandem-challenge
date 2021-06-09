@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>TandemChallenge.Api</name>
+    </assembly>
+    <members>
+        <member name="M:TandemChallenge.Controllers.Api.UserController.Add(TandemChallenge.Api.Models.AddUserViewModel)">
+            <summary>
+            Creates a new user within the system.
+            </summary>
+            <param name="viewModel"></param>
+            <returns></returns>
+        </member>
+        <member name="T:TandemChallenge.Api.Models.AddUserViewModel">
+            <summary>
+            Defines the contract for adding a new user within the system.
+            </summary>
+        </member>
+        <member name="P:TandemChallenge.Api.Models.AddUserViewModel.FirstName">
+            <summary>
+            The first name of the user to be added.
+            </summary>
+        </member>
+        <member name="P:TandemChallenge.Api.Models.AddUserViewModel.MiddleName">
+            <summary>
+            The middle name of the user to be added.
+            </summary>
+        </member>
+        <member name="P:TandemChallenge.Api.Models.AddUserViewModel.LastName">
+            <summary>
+            The last name of the user to be added.
+            </summary>
+        </member>
+        <member name="P:TandemChallenge.Api.Models.AddUserViewModel.PhoneNumber">
+            <summary>
+            The primary phone number.
+            </summary>
+        </member>
+        <member name="P:TandemChallenge.Api.Models.AddUserViewModel.EmailAddress">
+            <summary>
+            The primary email address.
+            </summary>
+        </member>
+        <member name="T:TandemChallenge.Api.Models.UserViewModel">
+            <summary>
+            Represents a user within the system.
+            </summary>
+        </member>
+        <member name="P:TandemChallenge.Api.Models.UserViewModel.Id">
+            <summary>
+            The internal identifier for the user.
+            </summary>
+        </member>
+        <member name="P:TandemChallenge.Api.Models.UserViewModel.Name">
+            <summary>
+            The full name of the user.
+            </summary>
+        </member>
+        <member name="P:TandemChallenge.Api.Models.UserViewModel.PhoneNumber">
+            <summary>
+            The primary phone number.
+            </summary>
+        </member>
+        <member name="P:TandemChallenge.Api.Models.UserViewModel.EmailAddress">
+            <summary>
+            The primary email address.
+            </summary>
+        </member>
+        <member name="T:TandemChallenge.NullFilterAttribute">
+            <summary>
+            Filters null responses to return a <see cref="T:Microsoft.AspNetCore.Mvc.NotFoundResult"/>
+            </summary>
+        </member>
+        <member name="M:TandemChallenge.NullFilterAttribute.OnActionExecuted(Microsoft.AspNetCore.Mvc.Filters.ActionExecutedContext)">
+            <inheritdoc />
+        </member>
+        <member name="M:TandemChallenge.NullFilterAttribute.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

@@ -4,7 +4,7 @@ using TandemChallenge.Domain;
 
 namespace TandemChallenge.Api.Mapping
 {
-    public class AddUserViewModelToCreateUserCommandProfile : Profile
+    internal class AddUserViewModelToCreateUserCommandProfile : Profile
     {
         public AddUserViewModelToCreateUserCommandProfile()
         {
